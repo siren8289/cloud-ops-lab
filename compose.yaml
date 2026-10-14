@@ -1,0 +1,28 @@
+# 실행할 서비스 선언
+services:
+  api:
+    build: .# 현재 폴더에서 Dockerfile찾아 Docker 이미지 빌드
+    ports:
+      - "127.0.0.1:8000:8000" # 외부 접속 포트
+    environment:
+      DATABASE_URL: postgresql://app:localpass@db:5432/products
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: localpass
+      POSTGRES_DB: products
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d products"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:

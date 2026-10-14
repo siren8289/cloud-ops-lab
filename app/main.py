@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from .database import connect
+
 
 app = FastAPI()
 
@@ -16,3 +18,13 @@ def products(): # 3. 파이썬 함수 products()
     return [ # 4. Json응답
         {"id": 1, "name": "Keyboard"}
     ]
+
+
+@app.get("/db-health")
+def db_health():
+    with connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1")
+            value = cur.fetchone()[0]
+
+    return {"database": value}
