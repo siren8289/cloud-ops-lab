@@ -1,0 +1,9 @@
+VPC: 10.0.0.0/16
+
+# Public Subnets (Internet Gateway 연결, 외부 트래픽 수신 계층)
+Public A:  10.0.1.0/24  (AZ-a: ALB, Nginx Reverse Proxy 배치)
+Public B:  10.0.2.0/24  (AZ-c: ALB Multi-AZ 이중화 배치)
+
+# Private Subnets (NAT Gateway 또는 내부 통신 전용, 데이터 보호 계층)
+Private A: 10.0.11.0/24 (AZ-a: FastAPI Application, RDS Primary 배치)
+Private B: 10.0.12.0/24 (AZ-c: FastAPI Application, RDS Standby/Multi-AZ 배치)
